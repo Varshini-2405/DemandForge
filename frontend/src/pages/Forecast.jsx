@@ -17,16 +17,16 @@ import PredictionCard from '../components/PredictionCard';
 import ForecastInsights from '../components/ForecastInsights';
 import AlertBanner from '../components/AlertBanner';
 import { usePrediction } from '../hooks/usePrediction';
-import { useBackendHealth } from '../hooks/useBackendHealth';
+import { useApiHealth } from '../context/ApiHealthContext';
 import { useToast } from '../App';
-import { getProducts, getStores, API_BASE_URL } from '../services/api';
+import { getProducts, getStores } from '../services/api';
 
 const today = () => new Date().toISOString().split('T')[0];
 
 const Forecast = () => {
   const location = useLocation();
   const { addToast } = useToast();
-  const { online, latency: currentHealthLatency, modelDetails } = useBackendHealth();
+  const { online, showConnected, latency: currentHealthLatency, modelDetails } = useApiHealth();
   const {
     predict,
     prediction,
@@ -226,15 +226,6 @@ const Forecast = () => {
         </div>
       </motion.div>
 
-      {!online && (
-        <motion.div variants={itemVariants}>
-          <AlertBanner
-            type="warning"
-            message={`Cannot reach API at ${API_BASE_URL}. Render free tier may need ~30s to wake up — refresh shortly.`}
-          />
-        </motion.div>
-      )}
-
       {error && (
         <motion.div variants={itemVariants}>
           <AlertBanner type="warning" message={error} />
@@ -396,7 +387,7 @@ const Forecast = () => {
               </div>
             </div>
 
-            <button type="submit" disabled={loading || !online} className="w-full glass-btn-primary py-4 text-sm font-bold uppercase tracking-wide flex items-center justify-center gap-2">
+            <button type="submit" disabled={loading} className="w-full glass-btn-primary py-4 text-sm font-bold uppercase tracking-wide flex items-center justify-center gap-2">
               <Sparkles className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
               {loading ? 'Running AI Forecast...' : 'Generate Demand Forecast'}
             </button>
@@ -423,13 +414,13 @@ const Forecast = () => {
             </h4>
             <div className="flex justify-between text-xs">
               <span className="text-gray-400">API</span>
-              <span className={online ? 'text-emerald-500 font-bold' : 'text-rose-500'}>
-                {online ? 'AI Forecast Engine Connected' : 'Offline'}
+              <span className={showConnected ? 'text-emerald-500 font-bold' : 'text-amber-500'}>
+                {showConnected ? 'AI Forecast Engine Connected' : 'Connecting…'}
               </span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-400">Latency</span>
-              <span className="font-mono">{online ? `${currentHealthLatency}ms` : '—'}</span>
+              <span className="font-mono">{showConnected && currentHealthLatency ? `${currentHealthLatency}ms` : '—'}</span>
             </div>
             <div className="flex justify-between text-xs">
               <span className="text-gray-400">Model</span>

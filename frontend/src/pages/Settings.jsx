@@ -8,13 +8,13 @@ import {
   Database,
   Cpu
 } from 'lucide-react';
-import { checkApiHealth, API_BASE_URL } from '../services/api';
+import { API_BASE_URL } from '../services/api';
+import { useApiHealth } from '../context/ApiHealthContext';
 import { motion } from 'framer-motion';
 
 const SettingsPage = () => {
   const [loading, setLoading] = useState(false);
-  const [apiOnline, setApiOnline] = useState(false);
-  const [modelDetails, setModelDetails] = useState(null);
+  const { online: apiOnline, modelDetails, refresh } = useApiHealth();
   const [logs, setLogs] = useState([
     { time: new Date().toLocaleTimeString(), type: 'info', msg: 'System initialized. Axios client targeting FastAPI backend.' },
     { time: new Date().toLocaleTimeString(), type: 'info', msg: 'Theme engine successfully synchronized with browser media preferences.' }
@@ -25,15 +25,12 @@ const SettingsPage = () => {
     setLoading(true);
     addLog('info', 'Executing API handshake ping to backend...');
     
-    const status = await checkApiHealth();
-    setApiOnline(status.online);
+    const status = await refresh();
     
     if (status.online) {
-      setModelDetails(status.data);
-      addLog('success', `API Handshake Successful (200 OK). Loaded model: ${status.data.loaded_model || 'Random Forest'}`);
+      addLog('success', `API Handshake Successful (200 OK). Loaded model: ${status.data?.loaded_model || 'Random Forest'}`);
     } else {
-      setModelDetails(null);
-      addLog('error', `API unreachable at ${API_BASE_URL}. If using Render free tier, wait for the service to wake up and retry.`);
+      addLog('warning', `Still connecting to ${API_BASE_URL} — retrying in the background.`);
     }
     
     setLoading(false);

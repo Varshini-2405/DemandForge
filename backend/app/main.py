@@ -141,6 +141,22 @@ def read_root(db: Session = Depends(get_db)):
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
-def health_probe():
-    """Lightweight probe for Render — always 200 if process is up."""
-    return {"status": "ok"}
+def health_probe(db: Session = Depends(get_db)):
+    """Probe for Render + frontend warm-up (always 200 when process is up)."""
+    db_status = "offline"
+    try:
+        db.execute(text("SELECT 1"))
+        db_status = "online"
+    except Exception:
+        db_status = "offline"
+
+    model_loaded = hasattr(app.state, "model") and app.state.model is not None
+    ready = model_loaded
+
+    return {
+        "status": "ok",
+        "ready": ready,
+        "model_loaded": model_loaded,
+        "database": db_status,
+        "environment": os.getenv("ENVIRONMENT", "development"),
+    }

@@ -13,13 +13,14 @@ import {
   PackageCheck,
   Settings2,
   History,
+  Loader2,
 } from 'lucide-react';
-import { checkApiHealth, API_BASE_URL } from '../services/api';
+import { useApiHealth } from '../context/ApiHealthContext';
 
 const Navbar = () => {
   const [theme, setTheme] = useState('dark');
-  const [apiConnected, setApiConnected] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { checking, online, showConnected } = useApiHealth();
   const location = useLocation();
 
   useEffect(() => {
@@ -27,16 +28,6 @@ const Navbar = () => {
     if (theme === 'dark') root.classList.add('dark');
     else root.classList.remove('dark');
   }, [theme]);
-
-  useEffect(() => {
-    const fetchHealth = async () => {
-      const status = await checkApiHealth();
-      setApiConnected(status.online);
-    };
-    fetchHealth();
-    const interval = setInterval(fetchHealth, 10000);
-    return () => clearInterval(interval);
-  }, []);
 
   const getPageTitle = () => {
     switch (location.pathname) {
@@ -59,28 +50,33 @@ const Navbar = () => {
     { name: 'Settings', path: '/settings', icon: <Settings2 className="w-4 h-4" /> },
   ];
 
-  const statusPill = (compact = false) => (
-    <div
-      className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border ${
-        apiConnected
-          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-          : 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400'
-      }`}
-    >
-      {apiConnected ? (
-        <>
+  const statusPill = (compact = false) => {
+    if (checking && !online) {
+      return (
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          <span>{compact ? 'Connecting' : 'Connecting to AI engine…'}</span>
+        </div>
+      );
+    }
+
+    if (showConnected) {
+      return (
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <Wifi className="w-3.5 h-3.5" />
           <span>{compact ? 'Connected' : 'AI Forecast Engine Connected'}</span>
-        </>
-      ) : (
-        <>
-          <WifiOff className="w-3.5 h-3.5" />
-          <span>{compact ? 'Offline' : 'API unreachable — check connection'}</span>
-        </>
-      )}
-    </div>
-  );
+        </div>
+      );
+    }
+
+    return (
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold border bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400">
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        <span>{compact ? 'Reconnecting' : 'Reconnecting to API…'}</span>
+      </div>
+    );
+  };
 
   return (
     <header className="sticky top-0 z-30 w-full border-b border-gray-200/50 bg-white/80 dark:bg-brand-navy-deep/80 dark:border-white/5 backdrop-blur-md">
@@ -132,7 +128,6 @@ const Navbar = () => {
               );
             })}
             <div className="mt-4 flex justify-center">{statusPill(true)}</div>
-            <p className="text-center text-[10px] text-gray-400 font-mono mt-2">{API_BASE_URL}</p>
           </nav>
         </div>
       )}

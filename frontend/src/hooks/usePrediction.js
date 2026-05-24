@@ -74,7 +74,7 @@ export const usePrediction = () => {
         const msg =
           err.response?.data?.detail ||
           (err.message === 'Network Error'
-            ? 'Cannot reach API. The server may be waking up — try again in a few seconds.'
+            ? 'Request timed out while the server was waking up. Please try again.'
             : err.message) ||
           'Prediction failed';
         setError(typeof msg === 'string' ? msg : JSON.stringify(msg));

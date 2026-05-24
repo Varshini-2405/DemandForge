@@ -8,7 +8,7 @@ import Analytics from './pages/Analytics';
 import Inventory from './pages/Inventory';
 import Settings from './pages/Settings';
 import PredictionHistory from './pages/PredictionHistory';
-
+import { ApiHealthProvider } from './context/ApiHealthContext';
 
 export const ToastContext = createContext();
 export const useToast = () => useContext(ToastContext);
@@ -29,6 +29,7 @@ const AppContent = () => {
   };
 
   return (
+    <ApiHealthProvider>
     <ToastContext.Provider value={{ addToast }}>
       <Router>
         <div className="flex min-h-screen bg-gray-50 text-gray-900 dark:bg-brand-navy-deep dark:text-gray-100 font-sans antialiased">
@@ -77,6 +78,7 @@ const AppContent = () => {
           </div>
         </Router>
       </ToastContext.Provider>
+    </ApiHealthProvider>
   );
 };
 
