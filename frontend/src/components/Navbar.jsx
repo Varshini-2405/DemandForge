@@ -76,7 +76,7 @@ const Navbar = () => {
       ) : (
         <>
           <WifiOff className="w-3.5 h-3.5" />
-          <span>{compact ? 'Offline' : 'Backend Offline — start API on :8000'}</span>
+          <span>{compact ? 'Offline' : 'API unreachable — check connection'}</span>
         </>
       )}
     </div>

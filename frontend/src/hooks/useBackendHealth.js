@@ -15,7 +15,7 @@ export const useBackendHealth = () => {
   const triggerCheck = useCallback(async () => {
     setLoading(true);
     const health = await checkApiHealth();
-    setOnline(health.online && health.data?.model_loaded === true);
+    setOnline(health.online);
     setLatency(health.latency);
     setModelDetails(health.data);
     setLoading(false);

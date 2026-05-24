@@ -33,7 +33,7 @@ const SettingsPage = () => {
       addLog('success', `API Handshake Successful (200 OK). Loaded model: ${status.data.loaded_model || 'Random Forest'}`);
     } else {
       setModelDetails(null);
-      addLog('error', 'Connection refused. Start backend: cd backend && .venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000');
+      addLog('error', `API unreachable at ${API_BASE_URL}. If using Render free tier, wait for the service to wake up and retry.`);
     }
     
     setLoading(false);

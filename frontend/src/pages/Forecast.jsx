@@ -230,7 +230,7 @@ const Forecast = () => {
         <motion.div variants={itemVariants}>
           <AlertBanner
             type="warning"
-            message={`Cannot reach API at ${API_BASE_URL}. Start backend: cd backend && .venv\\Scripts\\python.exe -m uvicorn app.main:app --reload --port 8000`}
+            message={`Cannot reach API at ${API_BASE_URL}. Render free tier may need ~30s to wake up — refresh shortly.`}
           />
         </motion.div>
       )}

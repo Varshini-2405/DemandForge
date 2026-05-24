@@ -74,7 +74,7 @@ export const usePrediction = () => {
         const msg =
           err.response?.data?.detail ||
           (err.message === 'Network Error'
-            ? 'Cannot reach backend. Ensure API is running on http://127.0.0.1:8000'
+            ? 'Cannot reach API. The server may be waking up — try again in a few seconds.'
             : err.message) ||
           'Prediction failed';
         setError(typeof msg === 'string' ? msg : JSON.stringify(msg));

@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-export const API_BASE_URL =
-  import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+const PRODUCTION_API_URL = 'https://demandforge-5.onrender.com';
+
+const normalizeBaseUrl = (url) => String(url || '').replace(/\/+$/, '');
+
+export const API_BASE_URL = normalizeBaseUrl(
+  import.meta.env.VITE_API_URL || PRODUCTION_API_URL
+);
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -9,7 +14,7 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
-  timeout: 30000,
+  timeout: 60000,
 });
 
 apiClient.interceptors.request.use(
@@ -28,7 +33,7 @@ export const loginUser = async (username, password) => {
   formData.append('username', username);
   formData.append('password', password);
 
-  const response = await axios.post(`${API_BASE_URL}/auth/login`, formData, {
+  const response = await apiClient.post('/auth/login', formData, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   });
   return response.data;
@@ -43,7 +48,7 @@ export const registerUser = async (username, email, password) => {
   return response.data;
 };
 
-export const checkApiHealth = async () => {
+export const checkApiHealth = async (retries = 1) => {
   const start = performance.now();
   try {
     const response = await apiClient.get('/');
@@ -51,12 +56,24 @@ export const checkApiHealth = async () => {
     const latency = Math.round(end - start);
     const data = response.data;
     const online =
-      data?.status === 'healthy' &&
-      data?.database === 'online' &&
-      data?.model_loaded === true;
+      data?.model_loaded === true &&
+      (data?.status === 'healthy' || data?.database === 'online');
 
     return { online, latency, data };
   } catch (error) {
+    const status = error.response?.status;
+    const isWakeUp =
+      !error.response ||
+      status === 502 ||
+      status === 503 ||
+      error.code === 'ECONNABORTED' ||
+      error.message === 'Network Error';
+
+    if (retries > 0 && isWakeUp) {
+      await new Promise((r) => setTimeout(r, 2500));
+      return checkApiHealth(retries - 1);
+    }
+
     const end = performance.now();
     return {
       online: false,
@@ -101,4 +118,3 @@ export const getStores = async () => {
   const response = await apiClient.get('/predictions/stores');
   return response.data;
 };
-
