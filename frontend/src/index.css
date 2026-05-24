@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Premium Glassmorphic Cards */
+  .glass-card {
+    @apply bg-white/80 dark:bg-brand-navy-light/60 backdrop-blur-lg border border-gray-200/50 dark:border-white/10 rounded-2xl shadow-glass transition-all duration-300;
+  }
+  
+  .glass-card-hover {
+    @apply hover:shadow-glass-purple hover:border-brand-purple/30 dark:hover:border-brand-purple/20 hover:-translate-y-0.5;
+  }
+
+  /* Glass Form Inputs */
+  .glass-input {
+    @apply bg-gray-50/50 dark:bg-brand-navy/60 border border-gray-300 dark:border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple/20 transition-all duration-200 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500;
+  }
+
+  /* Glass Buttons */
+  .glass-btn-primary {
+    @apply bg-gradient-to-r from-brand-purple to-brand-purple-dark text-white rounded-xl px-5 py-2.5 font-medium shadow-lg hover:shadow-brand-purple/30 hover:opacity-95 transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98];
+  }
+
+  .glass-btn-secondary {
+    @apply bg-gray-100 dark:bg-brand-navy-lighter/60 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-white/5 rounded-xl px-5 py-2.5 font-medium hover:bg-gray-200 dark:hover:bg-brand-navy-lighter/80 transition-all duration-200 flex items-center justify-center gap-2 active:scale-[0.98];
+  }
+
+  /* Vibrant CSS Gradients */
+  .text-gradient-purple {
+    @apply bg-gradient-to-r from-brand-purple to-pink-500 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-cyan {
+    @apply bg-gradient-to-r from-brand-cyan to-brand-purple bg-clip-text text-transparent;
+  }
+  
+  .bg-gradient-brand {
+    @apply bg-gradient-to-r from-brand-purple to-brand-cyan;
+  }
+}
+
+/* Custom modern thin scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-white/10 rounded-full hover:bg-gray-400 dark:hover:bg-white/20;
+}
+
+/* Glass table headers and rows */
+.table-header {
+  @apply bg-gray-100/50 dark:bg-brand-navy-deep/40 text-gray-500 dark:text-gray-400 font-semibold text-xs tracking-wider uppercase border-b border-gray-200/50 dark:border-white/5;
+}
+
+.table-row {
+  @apply border-b border-gray-200/40 dark:border-white/5 hover:bg-gray-50/50 dark:hover:bg-brand-navy-lighter/20 transition-all duration-150;
+}
