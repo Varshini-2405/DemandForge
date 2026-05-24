@@ -1,45 +1,115 @@
-# DemandForge_ (KiranaIQ)
+# DemandForge – AI Powered Retail Forecasting SaaS Platform
 
-AI-powered retail demand forecasting SaaS — React + FastAPI + scikit-learn.
+## Live Demo
+### Frontend
+https://demand-forge-one.vercel.app(Click here to see the project)
 
-**GitHub repository name:** `DemandForge_`
 
-## Quick start (local)
+### Backend API
+https://demandforge-5.onrender.com
 
-### Backend (Python 3.12)
 
+# Overview
+DemandForge is a full-stack AI-powered retail analytics and demand forecasting platform built to help small retail/kirana stores predict product demand, monitor inventory, and analyze sales trends using Machine Learning.
+
+The project combines:
+* Machine Learning
+* Full Stack Development
+* Analytics Dashboards
+* SaaS UI/UX
+* API Integration
+* Cloud Deployment
+into one modern AI product.
+
+
+# Features
+* AI-based demand forecasting
+* Interactive analytics dashboard
+* Inventory monitoring system
+* Festival-aware demand prediction
+* Sales trend visualizations
+* Modern responsive SaaS UI
+* FastAPI backend APIs
+* Machine Learning prediction engine
+* Real-time frontend/backend integration
+* Cloud deployment using Vercel and Render
+
+
+# Tech Stack
+## Frontend
+* React
+* Vite
+* Tailwind CSS
+* Recharts
+
+## Backend
+* FastAPI
+* Python
+* scikit-learn
+* SQLAlchemy
+* SQLite
+
+## Deployment
+* Vercel (Frontend)
+* Render (Backend)
+* GitHub
+
+
+# Machine Learning Workflow
+The forecasting system was trained using:
+
+* Historical sales patterns
+* Price and discount trends
+* Inventory availability
+* Festival/weekend demand behavior
+* Rolling averages and lag features
+
+The model predicts future product demand for retail stores.
+
+
+# Project Workflow
+1. Data Cleaning and Analysis
+2. SQL + Exploratory Data Analysis
+3. Feature Engineering
+4. Machine Learning Model Training
+5. FastAPI Backend Development
+6. React Frontend Dashboard
+7. Frontend ↔ Backend Integration
+8. Cloud Deployment
+
+
+# Main Dashboard Modules
+
+* Dashboard Overview
+* Forecast Engine
+* Inventory Analytics
+* Sales Analytics
+* AI Insights
+* Prediction History
+
+
+# Local Setup
+## Backend
 ```bash
 cd backend
-py -3.12 -m venv .venv
-.\.venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env
-python scripts/train_model.py
-.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn app.main:app --reload
 ```
 
-### Frontend
-
+## Frontend
 ```bash
 cd frontend
 npm install
-# Set VITE_API_URL in .env (default http://127.0.0.1:8000)
 npm run dev
 ```
 
-Open http://localhost:5173 — run forecasts on **Forecast** (no sign-in required).
+# Future Improvements
 
-## Deploy
+* Automated feature generation
+* Real retailer datasets
+* Advanced forecasting models
+* AI chatbot assistant
+* PDF/CSV report generation
+* Multi-store analytics
 
-| Service | Platform | Config |
-|---------|----------|--------|
-| Frontend | [Vercel](https://vercel.com) | Root: `frontend`, env `VITE_API_URL` = your API URL |
-| Backend | [Render](https://render.com) | Use `render.yaml`, set `DATABASE_URL` (PostgreSQL) and `CORS_ORIGINS` |
 
-**Render env vars:** `SECRET_KEY`, `DATABASE_URL`, `CORS_ORIGINS` (your Vercel URL), `ENVIRONMENT=production`
-
-**Vercel env:** `VITE_API_URL=https://your-api.onrender.com`
-
-## ML features (exact order)
-
-`store_id`, `product_id`, `category_id`, `price`, `base_price`, `stock_available`, `is_weekend`, `is_festival_near`, `month`, `year`, `day`, `week`, `quarter`, `price_difference`, `discount_percent`, `lag_1_units_sold`, `lag_7_units_sold`, `rolling_7_day_avg`, `rolling_14_day_avg`, `stock_risk`
